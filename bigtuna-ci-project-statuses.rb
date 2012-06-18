@@ -12,7 +12,7 @@ projects = doc.css('.project')
 project_statuses = projects.map do |project|
 	
 	id = project.attr('id') #=> "project_6"
-	id_num = id.match(/\d+/).to_s
+	id_num = id.match(/\d+/).to_s.to_i
 	
 	name = project.at_css('h3 a').content.strip
 	
