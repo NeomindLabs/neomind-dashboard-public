@@ -5,8 +5,8 @@ require 'letsfreckle'
 require 'date'
 require 'pp'
 
-# calculate total hours worked for the given date
-def get_total_hours_worked_on(date)
+# calculate total hours logged for the given date
+def get_total_hours_logged_on(date)
 	LetsFreckle.configure do
 		account_host 'redacted'
 		username 'redacted'
@@ -27,7 +27,7 @@ def minutes_to_hours(minutes)
 end
 
 if __FILE__ == $0 # if this file is run directly
-	total_hours_worked = get_total_hours_worked_on(Date.today)
+	total_hours_logged = get_total_hours_logged_on(Date.today)
 	puts "hours worked today, so far:"
-	pp total_hours_worked
+	pp total_hours_logged
 end
