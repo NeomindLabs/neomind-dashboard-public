@@ -35,7 +35,18 @@ def update_freckle_hours(updater)
 	# updater.push_number widget_id, a_number
 end
 
+def update_leftronic_update_status(updater, succeeded)
+	status_widget_id = 'edyTl2k8'
+	success_ratings = {true => 0, false => 100}
+	updater.push_number status_widget_id, success_ratings[succeeded]
+end
+
 access_key = 'redacted'
 updater = Leftronic.new access_key
-# update_build_statuses(updater)
-update_freckle_hours(updater)
+begin
+	update_build_statuses(updater)
+	update_freckle_hours(updater)
+	update_leftronic_update_status(updater, true)
+rescue
+	update_leftronic_update_status(updater, false)
+end
