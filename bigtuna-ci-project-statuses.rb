@@ -26,5 +26,7 @@ def get_project_statuses
 	return project_statuses.sort_by { |status| status[:id_num] }
 end
 
-project_statuses = get_project_statuses
-pp project_statuses
+if __FILE__ == $0 # if this file is run directly
+	project_statuses = get_project_statuses
+	pp project_statuses
+end
