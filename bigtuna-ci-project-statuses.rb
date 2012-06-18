@@ -14,7 +14,7 @@ project_statuses = projects.map do |project|
 	id = project.attr('id') #=> "project_6"
 	id_num = id.match(/\d+/).to_s
 	
-	name = project.at_css('h3 a').content
+	name = project.at_css('h3 a').content.strip
 	
 	classes = project.attr('class').split #=> "status_build_failed project"
 	build_status_class = classes[classes.find_index { |klass| klass.start_with?('status_build_') }]
