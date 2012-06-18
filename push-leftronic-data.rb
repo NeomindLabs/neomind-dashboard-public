@@ -7,6 +7,11 @@ require './freckle-hours-worked'
 require 'leftronic'
 
 def update_build_statuses(updater)
+	build_status_ratings = {
+		failed: 100,
+		in_progress: 50,
+		ok: 0,
+	}
 	build_project_name_widget_ids = {
 		"Project A" => 'ESlemK7N',
 		"Project B" => 'WhsAHBM2',
@@ -15,13 +20,7 @@ def update_build_statuses(updater)
 		"Project E" => 'QAWwnzHe',
 		"Project F" => 'sqALqaQ6',
 	}
-
-	build_status_ratings = {
-		failed: 100,
-		in_progress: 50,
-		ok: 0,
-	} 
-
+	
 	project_statuses = get_project_statuses
 	project_statuses.each do |status|
 		rating = build_status_ratings[ status[:build_status] ]
