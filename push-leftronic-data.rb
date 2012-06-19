@@ -4,7 +4,7 @@
 require './bigtuna-ci-project-statuses'
 require './freckle-hours-worked'
 
-require 'leftronic'
+require './leftronic/ruby/leftronic'
 require 'date'
 
 def update_build_statuses(updater)

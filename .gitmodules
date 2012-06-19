@@ -1,0 +1,3 @@
+[submodule "leftronic"]
+	path = leftronic
+	url = git@github.com:roryokane/leftronic.git
