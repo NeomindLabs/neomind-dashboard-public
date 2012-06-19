@@ -45,7 +45,6 @@ def update_freckle_hours(updater)
 		data_point = {number: hours_logged, timestamp: unix_timestamp, suffix: " hours"}
 		data_point
 	end.reverse
-	pp data_points
 	
 	updater.clear(freckle_stream_name)
 	updater.push_number(freckle_stream_name, data_points)
@@ -61,7 +60,7 @@ access_key = 'redacted'
 updater = Leftronic.new access_key
 begin
 	update_leftronic_update_status(updater, :in_progress)
-	# update_build_statuses(updater)
+	update_build_statuses(updater)
 	update_freckle_hours(updater)
 	update_leftronic_update_status(updater, :success)
 rescue Exception
