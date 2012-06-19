@@ -14,27 +14,27 @@ def update_build_statuses(updater)
 		in_queue: 50,
 		ok: 0,
 	}
-	build_project_name_widget_ids = {
-		"Project A" => 'ESlemK7N',
-		"Project B" => 'WhsAHBM2',
-		"Project C" => '9avuzLrP',
-		"Project D" => '9U41swTM',
-		"Project E" => 'QAWwnzHe',
-		"Project F" => 'sqALqaQ6',
+	build_project_name_stream_names = {
+		"Project A" => 'project_a_ci_status',
+		"Project B" => 'project_b_ci_status',
+		"Project C" => 'project_c_ci_status',
+		"Project D" => 'project_d_ci_status',
+		"Project E" => 'project_e_ci_status',
+		"Project F" => 'project_f_ci_status',
 	}
 	
 	project_statuses = get_project_statuses
 	project_statuses.each do |status|
 		rating = build_status_ratings[ status[:build_status] ]
-		raise "unknown build status" if rating == nil
-		widget_id = build_project_name_widget_ids[ status[:name] ]
-		raise "CI project has no corresponding widget"
-		updater.push_number widget_id, rating
+		raise "unknown build status" if rating.nil?
+		stream_name = build_project_name_stream_names[ status[:name] ]
+		raise "CI project has no corresponding stream" if stream_name.nil?
+		updater.push_number stream_name, rating
 	end
 end
 
 def update_freckle_hours(updater)
-	freckle_widget_id = '7qt5xKcc'
+	freckle_stream_name = 'freckle_daily_hours'
 	
 	data_points = (0..7).map do |days_ago|
 		date = Date.today.prev_day(days_ago)
@@ -47,14 +47,14 @@ def update_freckle_hours(updater)
 	end.reverse
 	pp data_points
 	
-	updater.clear(freckle_widget_id)
-	updater.push_number(freckle_widget_id, data_points)
+	updater.clear(freckle_stream_name)
+	updater.push_number(freckle_stream_name, data_points)
 end
 
 def update_leftronic_update_status(updater, status)
-	status_widget_id = 'edyTl2k8'
+	status_stream_name = 'updater_script_status'
 	status_ratings = {:success => 0, :in_progress => 50, :error => 100}
-	updater.push_number status_widget_id, status_ratings[status]
+	updater.push_number status_stream_name, status_ratings[status]
 end
 
 access_key = 'redacted'
