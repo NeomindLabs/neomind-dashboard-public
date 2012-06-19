@@ -5,6 +5,7 @@ require './bigtuna-ci-project-statuses'
 require './freckle-hours-worked'
 
 require 'leftronic'
+require 'date'
 
 def update_build_statuses(updater)
 	build_status_ratings = {
@@ -30,9 +31,18 @@ def update_build_statuses(updater)
 end
 
 def update_freckle_hours(updater)
-	freckle_widget_id = 'IriiyIFP'
+	freckle_widget_id = '7qt5xKcc'
 	
-	# updater.push_number widget_id, a_number
+	data_points = (0...7).map do |days_ago|
+		date = Date.today.prev_day(days_ago)
+		hours_logged = get_total_hours_logged_on(date)
+		
+		unix_timestamp = date.strftime('%s').to_i
+		data_point = {number: hours_logged, timestamp: unix_timestamp, suffix: " hours"}
+		data_point
+	end.reverse
+	pp data_points
+	updater.push_number(freckle_widget_id, data_points)
 end
 
 def update_leftronic_update_status(updater, succeeded)
@@ -44,7 +54,7 @@ end
 access_key = 'redacted'
 updater = Leftronic.new access_key
 begin
-	update_build_statuses(updater)
+	# update_build_statuses(updater)
 	update_freckle_hours(updater)
 	update_leftronic_update_status(updater, true)
 rescue Exception
