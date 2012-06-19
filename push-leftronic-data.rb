@@ -47,6 +47,7 @@ begin
 	update_build_statuses(updater)
 	update_freckle_hours(updater)
 	update_leftronic_update_status(updater, true)
-rescue
+rescue Exception
 	update_leftronic_update_status(updater, false)
+	raise
 end
