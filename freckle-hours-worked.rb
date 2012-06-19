@@ -30,4 +30,14 @@ if __FILE__ == $0 # if this file is run directly
 	total_hours_logged = get_total_hours_logged_on(Date.today)
 	puts "hours worked today, so far:"
 	pp total_hours_logged
+	
+	puts "loading past data…"
+	range_of_past_days = (0..7)
+	daily_counts = range_of_past_days.map do |days_ago|
+		date = Date.today.prev_day(days_ago)
+		puts days_ago.to_s + "…"
+		hours_logged = get_total_hours_logged_on(date)
+	end
+	pp daily_counts
+	puts "maximum hours worked in that time period:", daily_counts.max
 end
