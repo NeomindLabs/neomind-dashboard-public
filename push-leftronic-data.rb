@@ -11,6 +11,7 @@ def update_build_statuses(updater)
 	build_status_ratings = {
 		failed: 100,
 		in_progress: 50,
+		in_queue: 50,
 		ok: 0,
 	}
 	build_project_name_widget_ids = {
@@ -25,7 +26,9 @@ def update_build_statuses(updater)
 	project_statuses = get_project_statuses
 	project_statuses.each do |status|
 		rating = build_status_ratings[ status[:build_status] ]
+		raise "unknown build status" if rating == nil
 		widget_id = build_project_name_widget_ids[ status[:name] ]
+		raise "CI project has no corresponding widget"
 		updater.push_number widget_id, rating
 	end
 end
