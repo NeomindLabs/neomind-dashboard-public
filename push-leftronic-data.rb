@@ -36,7 +36,7 @@ end
 def update_freckle_hours(updater)
 	freckle_widget_id = '7qt5xKcc'
 	
-	data_points = (0...7).map do |days_ago|
+	data_points = (0..7).map do |days_ago|
 		date = Date.today.prev_day(days_ago)
 		hours_logged = get_total_hours_logged_on(date)
 		
