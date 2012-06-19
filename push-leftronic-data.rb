@@ -40,7 +40,8 @@ def update_freckle_hours(updater)
 		date = Date.today.prev_day(days_ago)
 		hours_logged = get_total_hours_logged_on(date)
 		
-		unix_timestamp = date.strftime('%s').to_i
+		normalized_date = date.to_time.utc
+		unix_timestamp = normalized_date.strftime('%s').to_i
 		data_point = {number: hours_logged, timestamp: unix_timestamp, suffix: " hours"}
 		data_point
 	end.reverse
