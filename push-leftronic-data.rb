@@ -45,6 +45,8 @@ def update_freckle_hours(updater)
 		data_point
 	end.reverse
 	pp data_points
+	
+	updater.clear(freckle_widget_id)
 	updater.push_number(freckle_widget_id, data_points)
 end
 
