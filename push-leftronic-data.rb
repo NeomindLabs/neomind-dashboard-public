@@ -48,19 +48,20 @@ def update_freckle_hours(updater)
 	updater.push_number(freckle_widget_id, data_points)
 end
 
-def update_leftronic_update_status(updater, succeeded)
+def update_leftronic_update_status(updater, status)
 	status_widget_id = 'edyTl2k8'
-	success_ratings = {true => 0, false => 100}
-	updater.push_number status_widget_id, success_ratings[succeeded]
+	status_ratings = {:success => 0, :in_progress => 50, :error => 100}
+	updater.push_number status_widget_id, status_ratings[status]
 end
 
 access_key = 'redacted'
 updater = Leftronic.new access_key
 begin
+	update_leftronic_update_status(updater, :in_progress)
 	# update_build_statuses(updater)
 	update_freckle_hours(updater)
-	update_leftronic_update_status(updater, true)
+	update_leftronic_update_status(updater, :success)
 rescue Exception
-	update_leftronic_update_status(updater, false)
+	update_leftronic_update_status(updater, :error)
 	raise
 end
