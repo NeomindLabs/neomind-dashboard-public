@@ -14,12 +14,13 @@ def update_build_statuses(updater)
 		in_queue: 50,
 		ok: 0,
 	}
-	build_project_name_stream_names = {
+	project_name_stream_names = {
 		"Project A" => 'project_a_ci_status',
 		"Project B" => 'project_b_ci_status',
 		"Project C" => 'project_c_ci_status',
 		"Project D" => 'project_d_ci_status',
 		"Project E" => 'project_e_ci_status',
+		"Project G" => 'project_g_ci_status',
 		"Project F" => 'project_f_ci_status',
 	}
 	
@@ -27,8 +28,9 @@ def update_build_statuses(updater)
 	project_statuses.each do |status|
 		rating = build_status_ratings[ status[:build_status] ]
 		raise "unknown build status" if rating.nil?
-		stream_name = build_project_name_stream_names[ status[:name] ]
-		raise "CI project has no corresponding stream" if stream_name.nil?
+		project_name = status[:name]
+		stream_name = project_name_stream_names[project_name]
+		raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
 		updater.push_number stream_name, rating
 	end
 end
@@ -50,20 +52,72 @@ def update_freckle_hours(updater)
 	updater.push_number(freckle_stream_name, data_points)
 end
 
-def update_leftronic_update_status(updater, status)
-	status_stream_name = 'updater_script_status'
-	status_ratings = {:success => 0, :in_progress => 50, :error => 100}
-	updater.push_number status_stream_name, status_ratings[status]
+class LeftronicUpdateStatusUpdater
+	def update(updater, status)
+		update_spotlight(updater, status)
+		update_text(updater, status)
+	end
+	
+	private
+	
+	def update_spotlight(updater, status)
+		status_stream_name = 'updater_script_status_spotlight'
+		status_ratings = {:success => 0, :in_progress => 50, :error => 100}
+		updater.push_number status_stream_name, status_ratings[status]
+	end
+
+	def update_text(updater, status)
+		status_stream_name = 'updater_script_status_text'
+		
+		html = begin
+			case status
+			when :success
+				html_of_time_with_header("Dashboard last "+invisible_link_to_script_code("updated"))
+			when :in_progress
+				# time format: "2:34:56 PM"
+				short_term_time_string = Time.now.strftime '%-l:%M:%S %p'
+				"Updating dashboard (#{short_term_time_string})…"
+			when :error
+				html_of_time_with_header("Dashboard "+invisible_link_to_script_code("update")+" failed")
+			end
+		end
+		
+		updater.push_html status_stream_name, html
+	end
+	
+	def invisible_link_to_script_code(link_text)
+		script_code_url = 'https://github.com/NeomindLabs/neomind-dashboard'
+		surrounding_text_color = '#CCC'
+		'<a href="'+script_code_url+'" style="color: '+surrounding_text_color+'">'+link_text+'</a>'
+	end
+
+	def html_of_time_with_header(header_body)
+		# time format: "Wed 2:34 PM"
+		medium_term_time_string = Time.now.strftime '%a %-l:%M %p'
+		
+		header = "<h2>#{header_body}:</h2>"
+		section_separator = "\n\n"
+		time_html = "<div>#{medium_term_time_string}</div>"
+		
+		return header + section_separator + time_html
+	end
 end
 
-access_key = 'redacted'
-updater = Leftronic.new access_key
-begin
-	update_leftronic_update_status(updater, :in_progress)
+def update_dashboard
+	access_key = 'redacted'
+	updater = Leftronic.new access_key
+	status_updater = LeftronicUpdateStatusUpdater.new
+	begin
+		status_updater.update(updater, :in_progress)
+		yield updater
+		status_updater.update(updater, :success)
+	rescue Exception
+		status_updater.update(updater, :error)
+		raise
+	end
+end
+
+update_dashboard do |updater|
 	update_build_statuses(updater)
 	update_freckle_hours(updater)
-	update_leftronic_update_status(updater, :success)
-rescue Exception
-	update_leftronic_update_status(updater, :error)
-	raise
 end
