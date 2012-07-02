@@ -74,8 +74,8 @@ class LeftronicUpdateStatusUpdater
 			when :success
 				html_of_time_with_header("Dashboard last "+invisible_link_to_script_code("updated"))
 			when :in_progress
-				# time format: "2:34:56 PM"
-				short_term_time_string = Time.now.strftime '%-l:%M:%S %p'
+				# time format: "2:34 PM"
+				short_term_time_string = Time.now.strftime '%-l:%M %p'
 				"Updating dashboard (#{short_term_time_string})…"
 			when :error
 				html_of_time_with_header("Dashboard "+invisible_link_to_script_code("update")+" failed")
