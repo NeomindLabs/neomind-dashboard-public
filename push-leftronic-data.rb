@@ -25,11 +25,14 @@ def update_build_statuses(updater)
 	
 	project_statuses = get_project_statuses
 	project_statuses.each do |status|
-		rating = build_status_ratings[ status[:build_status] ]
-		raise "unknown build status" if rating.nil?
+		build_status = status[:build_status]
+		rating = build_status_ratings[build_status]
+		raise "unknown build status “#{build_status}”" if rating.nil?
+		
 		project_name = status[:name]
 		stream_name = project_name_stream_names[project_name]
 		raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
+		
 		updater.push_number stream_name, rating
 	end
 end
