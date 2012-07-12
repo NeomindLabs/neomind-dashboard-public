@@ -24,6 +24,7 @@ def update_build_statuses(updater)
 		"Project E" => 'project_e_ci_status',
 		"Project G" => 'project_g_ci_status',
 		"Project F" => 'project_f_ci_status',
+		"Project H" => 'project_h_ci_status',
 	}
 	
 	project_statuses = get_project_statuses
