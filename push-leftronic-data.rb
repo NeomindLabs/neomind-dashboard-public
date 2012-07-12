@@ -6,15 +6,21 @@ require './freckle-hours-worked'
 require './leftronic/ruby/leftronic'
 require 'date'
 
+STOPLIGHT_COLOR_NUMBERS = {
+	green: 0,
+	yellow: 50,
+	red: 100,
+}
+
 def update_build_statuses(updater)
 	build_status_ratings = {
-		build_failed: 100,
-		build_ok: 0,
-		build_in_progress: 50,
-		build_in_queue: 50,
-		not_built: 50,
-		builder_error: 50,
-		hook_error: 50,
+		build_failed: :red,
+		build_ok: :green,
+		build_in_progress: :yellow,
+		build_in_queue: :yellow,
+		not_built: :yellow,
+		builder_error: :yellow,
+		hook_error: :yellow,
 	}
 	project_name_stream_names = {
 		"Project A" => 'project_a_ci_status',
@@ -32,12 +38,13 @@ def update_build_statuses(updater)
 		build_status = status[:build_status]
 		rating = build_status_ratings[build_status]
 		raise "unknown build status “#{build_status}”" if rating.nil?
+		number = STOPLIGHT_COLOR_NUMBERS[rating]
 		
 		project_name = status[:name]
 		stream_name = project_name_stream_names[project_name]
 		raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
 		
-		updater.push_number stream_name, rating
+		updater.push_number stream_name, number
 	end
 end
 
@@ -68,8 +75,9 @@ class LeftronicUpdateStatusUpdater
 	
 	def update_spotlight(updater, status)
 		status_stream_name = 'updater_script_status_spotlight'
-		status_ratings = {:success => 0, :in_progress => 50, :error => 100}
-		updater.push_number status_stream_name, status_ratings[status]
+		status_ratings = {:success => :green, :in_progress => :yellow, :error => :red}
+		number = STOPLIGHT_COLOR_NUMBERS[status_ratings[status]]
+		updater.push_number status_stream_name, number
 	end
 
 	def update_text(updater, status)
