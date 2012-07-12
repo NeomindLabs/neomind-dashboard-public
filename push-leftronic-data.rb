@@ -8,10 +8,13 @@ require 'date'
 
 def update_build_statuses(updater)
 	build_status_ratings = {
-		failed: 100,
-		in_progress: 50,
-		in_queue: 50,
-		ok: 0,
+		build_failed: 100,
+		build_ok: 0,
+		build_in_progress: 50,
+		build_in_queue: 50,
+		not_built: 50,
+		builder_error: 50,
+		hook_error: 50,
 	}
 	project_name_stream_names = {
 		"Project A" => 'project_a_ci_status',

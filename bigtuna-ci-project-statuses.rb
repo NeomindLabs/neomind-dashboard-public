@@ -17,8 +17,8 @@ def get_project_statuses
 		name = project.at_css('h3 a').content.strip
 		
 		classes = project.attr('class').split #=> "status_build_failed project"
-		build_status_class = classes[classes.find_index { |klass| klass.start_with?('status_build_') }]
-		status = build_status_class.sub('status_build_', '').to_sym
+		build_status_class = classes[classes.find_index { |klass| klass.start_with?('status_') }]
+		status = build_status_class.sub('status_', '').to_sym
 		
 		{id_num: id_num, name: name, build_status: status}
 	end
