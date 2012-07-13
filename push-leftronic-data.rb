@@ -16,7 +16,7 @@ STOPLIGHT_COLOR_NUMBERS = {
 }
 
 def update_build_statuses(updater)
-	build_status_ratings = {
+	build_status_colors = {
 		build_failed: :red,
 		build_ok: :green,
 		build_in_progress: :yellow,
@@ -25,12 +25,13 @@ def update_build_statuses(updater)
 		builder_error: :yellow,
 		hook_error: :yellow,
 	}
+	
 	project_name_stream_names = CONFIG["Leftronic dashboard"]["stream names"]["statuses for CI project names"]
 	
 	project_statuses = BigTunaCiProjectStatusReader.new.get_statuses
 	project_statuses.each do |status|
 		build_status = status[:build_status]
-		rating = build_status_ratings[build_status]
+		rating = build_status_colors[build_status]
 		raise "unknown build status “#{build_status}”" if rating.nil?
 		number = STOPLIGHT_COLOR_NUMBERS[rating]
 		
@@ -76,8 +77,8 @@ class LeftronicUpdateStatusUpdater
 	
 	def update_spotlight(updater, status)
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status spotlight"]
-		status_ratings = {:success => :green, :in_progress => :yellow, :error => :red}
-		number = STOPLIGHT_COLOR_NUMBERS[status_ratings[status]]
+		status_colors = {:success => :green, :in_progress => :yellow, :error => :red}
+		number = STOPLIGHT_COLOR_NUMBERS[status_colors[status]]
 		updater.push_number status_stream_name, number
 	end
 
