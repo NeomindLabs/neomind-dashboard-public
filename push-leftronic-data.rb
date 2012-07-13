@@ -45,15 +45,22 @@ end
 def update_freckle_hours(updater)
 	freckle_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["Freckle"]
 	
-	data_points = (0..7).map do |days_ago|
-		date = Date.today.prev_day(days_ago)
-		hours_logged = FreckleHoursLoggedReader.new.get_total_hours_logged_on(date)
-		
-		normalized_date = date.to_time.utc
-		unix_timestamp = normalized_date.strftime('%s').to_i
-		data_point = {number: hours_logged, timestamp: unix_timestamp, suffix: " hours"}
-		data_point
-	end.reverse
+	dates = (0..7).map do |days_ago|
+		Date.today.prev_day(days_ago)
+	end
+	data_points = dates.map do |date|
+		{
+			number: begin
+				hours_logged = FreckleHoursLoggedReader.new.get_total_hours_logged_on(date)
+			end,
+			timestamp: begin
+				normalized_date = date.to_time.utc
+				unix_timestamp = normalized_date.strftime('%s').to_i
+			end,
+			suffix: " hours",
+		}
+	end
+	data_points.reverse!
 	
 	updater.clear(freckle_stream_name)
 	updater.push_number(freckle_stream_name, data_points)
