@@ -27,7 +27,7 @@ def update_build_statuses(updater)
 	}
 	project_name_stream_names = CONFIG["Leftronic dashboard"]["stream names"]["statuses for CI project names"]
 	
-	project_statuses = get_project_statuses
+	project_statuses = BigTunaCiProjectStatusReader.new.get_statuses
 	project_statuses.each do |status|
 		build_status = status[:build_status]
 		rating = build_status_ratings[build_status]
@@ -47,7 +47,7 @@ def update_freckle_hours(updater)
 	
 	data_points = (0..7).map do |days_ago|
 		date = Date.today.prev_day(days_ago)
-		hours_logged = get_total_hours_logged_on(date)
+		hours_logged = FreckleHoursLoggedReader.new.get_total_hours_logged_on(date)
 		
 		normalized_date = date.to_time.utc
 		unix_timestamp = normalized_date.strftime('%s').to_i
