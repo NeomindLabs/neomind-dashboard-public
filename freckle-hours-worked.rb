@@ -1,16 +1,20 @@
 # encoding: utf-8
 
+require './config-loader'
+
 require 'letsfreckle'
 require 'date'
 require 'pp'
 
 class FreckleHoursLoggedReader
+	CONFIG = ConfigLoader.new.config_for("Freckle")
+	
 	# calculate total hours logged for the given date
 	def get_total_hours_logged_on(date)
 		LetsFreckle.configure do
-			account_host CONFIG["Freckle"]["account host"]
-			username CONFIG["Freckle"]["username"]
-			token CONFIG["Freckle"]["token"]
+			account_host CONFIG["account host"]
+			username CONFIG["username"]
+			token CONFIG["token"]
 		end
 		
 		date_for_freckle = date.strftime('%F')

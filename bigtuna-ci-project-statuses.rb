@@ -1,13 +1,17 @@
 # encoding: utf-8
 
+require './config-loader'
+
 require 'nokogiri'
 require 'open-uri'
 require 'pp'
 
 class BigTunaCiProjectStatusReader
+	CONFIG = ConfigLoader.new.config_for("BigTuna CI")
+	
 	# get project basic info and build statuses (all tests pass, some tests failed, in build queue, etc.)
 	def get_statuses
-		url = CONFIG["BigTuna CI"]["statuses URL"]
+		url = CONFIG["statuses URL"]
 		doc = Nokogiri::HTML(open(url))
 		projects = doc.css('.project')
 		
