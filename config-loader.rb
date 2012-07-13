@@ -28,8 +28,3 @@ class ConfigLoader
 		@config_data = YAML.load(config_file_contents)
 	end
 end
-
-if __FILE__ == $0 # if this file is run directly
-	puts "the configuration for just the updater script:"
-	puts ConfigLoader.new.config_for("updater script")
-end
