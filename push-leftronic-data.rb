@@ -81,7 +81,7 @@ class LeftronicUpdateStatusUpdater
 		number = STOPLIGHT_COLOR_NUMBERS[status_colors[status]]
 		updater.push_number status_stream_name, number
 	end
-
+	
 	def update_text(updater, status)
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status text"]
 		
@@ -106,7 +106,7 @@ class LeftronicUpdateStatusUpdater
 		surrounding_text_color = '#CCC'
 		'<a href="'+script_code_url+'" style="color: '+surrounding_text_color+'">'+link_text+'</a>'
 	end
-
+	
 	def html_of_time_with_header(header_body)
 		# time format: "Wed 2:34 PM"
 		medium_term_time_string = Time.now.strftime '%a %-l:%M %p'
@@ -122,10 +122,13 @@ end
 def update_dashboard
 	access_key = CONFIG["Leftronic dashboard"]["dashboard access key"]
 	updater = Leftronic.new access_key
+	
 	status_updater = LeftronicUpdateStatusUpdater.new
 	begin
 		status_updater.update(updater, :in_progress)
+		
 		yield updater
+		
 		status_updater.update(updater, :success)
 	rescue Exception
 		status_updater.update(updater, :error)

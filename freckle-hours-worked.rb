@@ -27,7 +27,7 @@ class FreckleHoursLoggedReader
 	end
 	
 	private
-
+	
 	def minutes_to_hours(minutes)
 		return minutes.to_f / 60
 	end
