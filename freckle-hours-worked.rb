@@ -7,9 +7,9 @@ require 'pp'
 # calculate total hours logged for the given date
 def get_total_hours_logged_on(date)
 	LetsFreckle.configure do
-		account_host 'redacted'
-		username 'redacted'
-		token 'redacted'
+		account_host CONFIG["Freckle"]["account host"]
+		username CONFIG["Freckle"]["username"]
+		token CONFIG["Freckle"]["token"]
 	end
 	
 	date_for_freckle = date.strftime('%F')

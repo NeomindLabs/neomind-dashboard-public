@@ -1,0 +1,30 @@
+updater script:
+  code URL: https://github.com/NeomindLabs/neomind-dashboard
+
+Leftronic dashboard:
+  dashboard access key: 'redacted'
+  stream names:
+  
+    statuses for CI project names:
+      "Project A": project_a_ci_status
+      "Project B": project_b_ci_status
+      "Project C": project_c_ci_status
+      "Project D": project_d_ci_status
+      "Project E": project_e_ci_status
+      "Project G": project_g_ci_status
+      "Project F": project_f_ci_status
+      "Project H": project_h_ci_status
+    
+    Freckle: freckle_daily_hours
+    
+    updater script:
+      status spotlight: updater_script_status_spotlight
+      status text: updater_script_status_text
+
+BigTuna CI:
+  statuses URL: redacted
+
+Freckle:
+  account host: redacted
+  username: redacted
+  token: 'redacted'

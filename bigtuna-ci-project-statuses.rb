@@ -5,7 +5,7 @@ require 'open-uri'
 require 'pp'
 
 def get_project_statuses
-	url = "redacted"
+	url = CONFIG["BigTuna CI"]["statuses URL"]
 	doc = Nokogiri::HTML(open(url))
 	projects = doc.css('.project')
 

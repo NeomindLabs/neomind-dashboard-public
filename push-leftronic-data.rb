@@ -2,9 +2,12 @@
 
 require './bigtuna-ci-project-statuses'
 require './freckle-hours-worked'
+require './config-loader'
 
 require './leftronic/ruby/leftronic'
 require 'date'
+
+CONFIG = ConfigLoader.new
 
 STOPLIGHT_COLOR_NUMBERS = {
 	green: 0,
@@ -22,16 +25,7 @@ def update_build_statuses(updater)
 		builder_error: :yellow,
 		hook_error: :yellow,
 	}
-	project_name_stream_names = {
-		"Project A" => 'project_a_ci_status',
-		"Project B" => 'project_b_ci_status',
-		"Project C" => 'project_c_ci_status',
-		"Project D" => 'project_d_ci_status',
-		"Project E" => 'project_e_ci_status',
-		"Project G" => 'project_g_ci_status',
-		"Project F" => 'project_f_ci_status',
-		"Project H" => 'project_h_ci_status',
-	}
+	project_name_stream_names = CONFIG["Leftronic dashboard"]["stream names"]["statuses for CI project names"]
 	
 	project_statuses = get_project_statuses
 	project_statuses.each do |status|
@@ -49,7 +43,7 @@ def update_build_statuses(updater)
 end
 
 def update_freckle_hours(updater)
-	freckle_stream_name = 'freckle_daily_hours'
+	freckle_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["Freckle"]
 	
 	data_points = (0..7).map do |days_ago|
 		date = Date.today.prev_day(days_ago)
@@ -74,14 +68,14 @@ class LeftronicUpdateStatusUpdater
 	private
 	
 	def update_spotlight(updater, status)
-		status_stream_name = 'updater_script_status_spotlight'
+		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status spotlight"]
 		status_ratings = {:success => :green, :in_progress => :yellow, :error => :red}
 		number = STOPLIGHT_COLOR_NUMBERS[status_ratings[status]]
 		updater.push_number status_stream_name, number
 	end
 
 	def update_text(updater, status)
-		status_stream_name = 'updater_script_status_text'
+		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status text"]
 		
 		html = begin
 			case status
@@ -100,7 +94,7 @@ class LeftronicUpdateStatusUpdater
 	end
 	
 	def invisible_link_to_script_code(link_text)
-		script_code_url = 'https://github.com/NeomindLabs/neomind-dashboard'
+		script_code_url = CONFIG["updater script"]["code URL"]
 		surrounding_text_color = '#CCC'
 		'<a href="'+script_code_url+'" style="color: '+surrounding_text_color+'">'+link_text+'</a>'
 	end
@@ -118,7 +112,7 @@ class LeftronicUpdateStatusUpdater
 end
 
 def update_dashboard
-	access_key = 'redacted'
+	access_key = CONFIG["Leftronic dashboard"]["dashboard access key"]
 	updater = Leftronic.new access_key
 	status_updater = LeftronicUpdateStatusUpdater.new
 	begin
