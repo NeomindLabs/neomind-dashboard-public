@@ -67,22 +67,27 @@ def update_freckle_hours(updater)
 	updater.push_number(freckle_stream_name, data_points)
 end
 
-class LeftronicUpdateStatusUpdater
-	def update(updater, status)
-		update_spotlight(updater, status)
-		update_text(updater, status)
+
+class DashboardUpdateStatusUpdater
+	def initialize(updater)
+		@updater = updater
+	end
+	
+	def update(status)
+		update_spotlight(status)
+		update_text(status)
 	end
 	
 	private
 	
-	def update_spotlight(updater, status)
+	def update_spotlight(status)
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status spotlight"]
 		status_colors = {:success => :green, :in_progress => :yellow, :error => :red}
 		number = STOPLIGHT_COLOR_NUMBERS[status_colors[status]]
-		updater.push_number status_stream_name, number
+		@updater.push_number status_stream_name, number
 	end
 	
-	def update_text(updater, status)
+	def update_text(status)
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status text"]
 		
 		html = begin
@@ -98,8 +103,10 @@ class LeftronicUpdateStatusUpdater
 			end
 		end
 		
-		updater.push_html status_stream_name, html
+		@updater.push_html status_stream_name, html
 	end
+	
+	# HTML generation methods:
 	
 	def invisible_link_to_script_code(link_text)
 		script_code_url = CONFIG["updater script"]["code URL"]
@@ -119,24 +126,34 @@ class LeftronicUpdateStatusUpdater
 	end
 end
 
-def update_dashboard
-	access_key = CONFIG["Leftronic dashboard"]["dashboard access key"]
-	updater = Leftronic.new access_key
+class DashboardUpdater
+	def initialize
+		initialize_updater
+	end
 	
-	status_updater = LeftronicUpdateStatusUpdater.new
-	begin
-		status_updater.update(updater, :in_progress)
-		
-		yield updater
-		
-		status_updater.update(updater, :success)
-	rescue Exception
-		status_updater.update(updater, :error)
-		raise
+	def update
+		status_updater = DashboardUpdateStatusUpdater.new @updater
+		begin
+			status_updater.update(:in_progress)
+			
+			yield @updater
+			
+			status_updater.update(:success)
+		rescue Exception
+			status_updater.update(:error)
+			raise
+		end
+	end
+	
+	private
+	
+	def initialize_updater
+		access_key = CONFIG["Leftronic dashboard"]["dashboard access key"]
+		@updater = Leftronic.new access_key
 	end
 end
 
-update_dashboard do |updater|
+DashboardUpdater.new.update do |updater|
 	update_build_statuses(updater)
 	update_freckle_hours(updater)
 end
