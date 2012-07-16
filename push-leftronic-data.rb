@@ -15,58 +15,69 @@ STOPLIGHT_COLOR_NUMBERS = {
 	red: 100,
 }
 
-def update_build_statuses(updater)
-	build_status_colors = {
-		build_failed: :red,
-		build_ok: :green,
-		build_in_progress: :yellow,
-		build_in_queue: :yellow,
-		not_built: :yellow,
-		builder_error: :yellow,
-		hook_error: :yellow,
-	}
-	
-	project_name_stream_names = CONFIG["Leftronic dashboard"]["stream names"]["statuses for CI project names"]
-	
-	project_statuses = BigTunaCiProjectStatusReader.new.get_statuses
-	project_statuses.each do |status|
-		build_status = status[:build_status]
-		rating = build_status_colors[build_status]
-		raise "unknown build status “#{build_status}”" if rating.nil?
-		number = STOPLIGHT_COLOR_NUMBERS[rating]
-		
-		project_name = status[:name]
-		stream_name = project_name_stream_names[project_name]
-		raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
-		
-		updater.push_number(stream_name, number)
+class CiBuildStatusUpdater
+	def initialize(ci_build_status_reader)
+		@ci_build_status_reader = ci_build_status_reader
 	end
-end
-
-def update_freckle_hours(updater)
-	freckle_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["Freckle"]
 	
-	dates = (0..7).map do |days_ago|
-		Date.today.prev_day(days_ago)
-	end
-	data_points = dates.map do |date|
-		{
-			number: begin
-				hours_logged = FreckleHoursLoggedReader.new.get_total_hours_logged_on(date)
-			end,
-			timestamp: begin
-				normalized_date = date.to_time.utc
-				unix_timestamp = normalized_date.strftime('%s').to_i
-			end,
-			suffix: " hours",
+	def update(updater)
+		build_status_colors = {
+			build_failed: :red,
+			build_ok: :green,
+			build_in_progress: :yellow,
+			build_in_queue: :yellow,
+			not_built: :yellow,
+			builder_error: :yellow,
+			hook_error: :yellow,
 		}
+		
+		project_name_stream_names = CONFIG["Leftronic dashboard"]["stream names"]["statuses for CI project names"]
+		
+		project_statuses = @ci_build_status_reader.get_statuses
+		project_statuses.each do |status|
+			build_status = status[:build_status]
+			rating = build_status_colors[build_status]
+			raise "unknown build status “#{build_status}”" if rating.nil?
+			number = STOPLIGHT_COLOR_NUMBERS[rating]
+			
+			project_name = status[:name]
+			stream_name = project_name_stream_names[project_name]
+			raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
+			
+			updater.push_number(stream_name, number)
+		end
 	end
-	data_points.reverse!
-	
-	updater.clear(freckle_stream_name)
-	updater.push_number(freckle_stream_name, data_points)
 end
 
+class HoursLoggedUpdater
+	def initialize(hours_logged_reader)
+		@hours_logged_reader = hours_logged_reader
+	end
+	
+	def update(updater)
+		hours_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["Freckle"]
+		
+		dates = (0..7).map do |days_ago|
+			Date.today.prev_day(days_ago)
+		end
+		data_points = dates.map do |date|
+			{
+				number: begin
+					hours_logged = @hours_logged_reader.get_total_hours_logged_on(date)
+				end,
+				timestamp: begin
+					normalized_date = date.to_time.utc
+					unix_timestamp = normalized_date.strftime('%s').to_i
+				end,
+				suffix: " hours",
+			}
+		end
+		data_points.reverse!
+		
+		updater.clear(hours_stream_name)
+		updater.push_number(hours_stream_name, data_points)
+	end
+end
 
 class DashboardUpdateStatusUpdater
 	def initialize(updater)
@@ -161,6 +172,9 @@ class DashboardUpdater
 end
 
 DashboardUpdater.new.update do |updater|
-	update_build_statuses(updater)
-	update_freckle_hours(updater)
+	build_status_updater = CiBuildStatusUpdater.new(BigTunaCiProjectStatusReader.new)
+	build_status_updater.update(updater)
+	
+	hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
+	hours_updater.update(updater)
 end
