@@ -39,7 +39,7 @@ def update_build_statuses(updater)
 		stream_name = project_name_stream_names[project_name]
 		raise "CI project “#{project_name}” has no corresponding stream" if stream_name.nil?
 		
-		updater.push_number stream_name, number
+		updater.push_number(stream_name, number)
 	end
 end
 
@@ -84,45 +84,52 @@ class DashboardUpdateStatusUpdater
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status spotlight"]
 		status_colors = {:success => :green, :in_progress => :yellow, :error => :red}
 		number = STOPLIGHT_COLOR_NUMBERS[status_colors[status]]
-		@updater.push_number status_stream_name, number
+		@updater.push_number(status_stream_name, number)
 	end
 	
 	def update_text(status)
 		status_stream_name = CONFIG["Leftronic dashboard"]["stream names"]["updater script"]["status text"]
-		
-		html = begin
-			case status
-			when :success
-				html_of_time_with_header("Dashboard last "+invisible_link_to_script_code("updated"))
-			when :in_progress
-				# time format: "2:34 PM"
-				short_term_time_string = Time.now.strftime '%-l:%M %p'
-				"Updating dashboard (#{short_term_time_string})…"
-			when :error
-				html_of_time_with_header("Dashboard "+invisible_link_to_script_code("update")+" failed")
-			end
+		html = UpdateStatusHtmlGenerator.html_explanation_of_status(status)
+		@updater.push_html(status_stream_name, html)
+	end
+end
+
+module UpdateStatusHtmlGenerator
+	def self.html_explanation_of_status(status)
+		case status
+		when :success
+			html_of_time_with_header("Dashboard last "+camouflaged_link_to_script_code("updated"))
+		when :in_progress
+			"Updating dashboard (#{short_term_time_string})…"
+		when :error
+			html_of_time_with_header("Dashboard "+camouflaged_link_to_script_code("update")+" failed")
 		end
-		
-		@updater.push_html status_stream_name, html
 	end
 	
-	# HTML generation methods:
+	private
 	
-	def invisible_link_to_script_code(link_text)
+	def self.camouflaged_link_to_script_code(link_text)
 		script_code_url = CONFIG["updater script"]["code URL"]
 		surrounding_text_color = '#CCC'
 		'<a href="'+script_code_url+'" style="color: '+surrounding_text_color+'">'+link_text+'</a>'
 	end
 	
-	def html_of_time_with_header(header_body)
-		# time format: "Wed 2:34 PM"
-		medium_term_time_string = Time.now.strftime '%a %-l:%M %p'
-		
+	def self.html_of_time_with_header(header_body)
 		header = "<h2>#{header_body}:</h2>"
 		section_separator = "\n\n"
 		time_html = "<div>#{medium_term_time_string}</div>"
 		
 		return header + section_separator + time_html
+	end
+	
+	def self.medium_term_time_string
+		# time format: "Wed 2:34 PM"
+		Time.now.strftime '%a %-l:%M %p'
+	end
+	
+	def self.short_term_time_string
+		# time format: "2:34 PM"
+		Time.now.strftime '%-l:%M %p'
 	end
 end
 
