@@ -122,6 +122,7 @@ module UpdateStatusHtmlGenerator
 	def self.camouflaged_link_to_script_code(link_text)
 		script_code_url = CONFIG["updater script"]["code URL"]
 		surrounding_text_color = '#CCC'
+		
 		'<a href="'+script_code_url+'" style="color: '+surrounding_text_color+'">'+link_text+'</a>'
 	end
 	

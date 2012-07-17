@@ -31,6 +31,7 @@ class BigTunaCiProjectStatusReader
 				end,
 			}
 		end
+		
 		return project_statuses.sort_by { |status| status[:id_num] }
 	end
 end
