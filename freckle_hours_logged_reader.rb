@@ -3,8 +3,6 @@
 require './config_loader'
 
 require 'letsfreckle'
-require 'date'
-require 'pp'
 
 class FreckleHoursLoggedReader
 	CONFIG = ConfigLoader.new.config_for("Freckle")
@@ -34,6 +32,9 @@ class FreckleHoursLoggedReader
 end
 
 if __FILE__ == $0 # if this file is run directly
+	require 'date'
+	require 'pp'
+	
 	freckle_reader = FreckleHoursLoggedReader.new
 	
 	total_hours_logged = freckle_reader.get_total_hours_logged_on(Date.today)

@@ -4,7 +4,6 @@ require './config_loader'
 
 require 'nokogiri'
 require 'open-uri'
-require 'pp'
 
 class BigtunaCiProjectStatusReader
 	CONFIG = ConfigLoader.new.config_for("BigTuna CI")
@@ -37,6 +36,8 @@ class BigtunaCiProjectStatusReader
 end
 
 if __FILE__ == $0 # if this file is run directly
+	require 'pp'
+	
 	project_statuses = BigtunaCiProjectStatusReader.new.get_statuses
 	pp project_statuses
 end
