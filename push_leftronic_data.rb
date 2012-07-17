@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require './bigtuna-ci-project-statuses'
-require './freckle-hours-worked'
-require './config-loader'
+require './bigtuna_ci_project_statuses'
+require './freckle_hours_worked'
+require './config_loader'
 
 require './leftronic/ruby/leftronic'
 require 'date'

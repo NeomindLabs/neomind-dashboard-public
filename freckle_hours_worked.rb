@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require './config-loader'
+require './config_loader'
 
 require 'letsfreckle'
 require 'date'
