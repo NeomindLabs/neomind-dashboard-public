@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'pp'
 
-class BigTunaCiProjectStatusReader
+class BigtunaCiProjectStatusReader
 	CONFIG = ConfigLoader.new.config_for("BigTuna CI")
 	
 	# get project basic info and build statuses (all tests pass, some tests failed, in build queue, etc.)
@@ -37,6 +37,6 @@ class BigTunaCiProjectStatusReader
 end
 
 if __FILE__ == $0 # if this file is run directly
-	project_statuses = BigTunaCiProjectStatusReader.new.get_statuses
+	project_statuses = BigtunaCiProjectStatusReader.new.get_statuses
 	pp project_statuses
 end
