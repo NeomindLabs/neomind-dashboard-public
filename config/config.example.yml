@@ -17,9 +17,9 @@ Leftronic dashboard:
       status text: updater_script_status_text
 
 BigTuna CI:
-  statuses URL: redacted
+  statuses URL: http://bigtuna.example.com/projects # URL for BigTuna page with list of projects
 
 Freckle:
-  account host: redacted
-  username: redacted
-  token: 'redacted'
+  account host: apitest # xxx.letsfreckle.com
+  username: apitest@letsfreckle.com # the email you sign in with
+  token: 'lx3gi6pxdjtjn57afp8c2bv1me7g89j' # get this from Settings & Tools > API
