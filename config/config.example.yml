@@ -2,7 +2,7 @@ updater script:
   code URL: https://github.com/NeomindLabs/neomind-dashboard
 
 Leftronic dashboard:
-  dashboard access key: 'redacted'
+  dashboard access key: 'bGVmdHJvbmljaXNhd2Vz' # find on https://www.leftronic.com/api/
   stream names:
   
     statuses for CI project names:
