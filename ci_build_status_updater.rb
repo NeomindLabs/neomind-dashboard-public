@@ -11,7 +11,7 @@ class CiBuildStatusUpdater
 	end
 	
 	def update(updater)
-		build_status_colors = {
+		BUILD_STATUS_COLORS = {
 			build_failed: :red,
 			build_ok: :green,
 			build_in_progress: :yellow,
@@ -26,7 +26,7 @@ class CiBuildStatusUpdater
 		project_statuses = @ci_build_status_reader.get_statuses
 		project_statuses.each do |status|
 			build_status = status[:build_status]
-			color = build_status_colors[build_status]
+			color = BUILD_STATUS_COLORS[build_status]
 			raise "unknown build status “#{build_status}”" if color.nil?
 			number = STOPLIGHT_COLOR_NUMBERS[color]
 			
