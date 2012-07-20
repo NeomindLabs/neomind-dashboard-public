@@ -15,7 +15,7 @@ Leftronic dashboard:
       "Project F": project_f_ci_status
       "Project H": project_h_ci_status
     
-    Freckle: freckle_daily_hours
+    daily logged hours: freckle_daily_hours
     
     updater script:
       status spotlight: updater_script_status_spotlight

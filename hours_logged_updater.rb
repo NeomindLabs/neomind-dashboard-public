@@ -12,7 +12,7 @@ class HoursLoggedUpdater
 	end
 	
 	def update(updater)
-		hours_stream_name = CONFIG["stream names"]["Freckle"]
+		hours_stream_name = CONFIG["stream names"]["daily logged hours"]
 		
 		dates = (0..7).map do |days_ago|
 			Date.today.prev_day(days_ago)
