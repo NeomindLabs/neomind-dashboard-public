@@ -10,17 +10,17 @@ class CiBuildStatusUpdater
 		@ci_build_status_reader = ci_build_status_reader
 	end
 	
+	BUILD_STATUS_COLORS = {
+		build_failed: :red,
+		build_ok: :green,
+		build_in_progress: :yellow,
+		build_in_queue: :yellow,
+		not_built: :yellow,
+		builder_error: :yellow,
+		hook_error: :yellow,
+	}
+	
 	def update(updater)
-		BUILD_STATUS_COLORS = {
-			build_failed: :red,
-			build_ok: :green,
-			build_in_progress: :yellow,
-			build_in_queue: :yellow,
-			not_built: :yellow,
-			builder_error: :yellow,
-			hook_error: :yellow,
-		}
-		
 		project_name_stream_names = CONFIG["stream names"]["statuses for CI project names"]
 		
 		project_statuses = @ci_build_status_reader.get_statuses
