@@ -10,6 +10,23 @@ class CiBuildStatusUpdater
 		@ci_build_status_reader = ci_build_status_reader
 	end
 	
+	def update(updater)
+		project_name_stream_names = CONFIG["stream names"]["statuses for CI project names"]
+		
+		project_statuses = @ci_build_status_reader.get_statuses
+		project_statuses.each do |status|
+			build_status = status[:build_status]
+			number_to_stream_for_status(build_status)
+			
+			project_name = status[:name]
+			stream_name = stream_name_for_project(project_name)
+			
+			updater.push_number(stream_name, number)
+		end
+	end
+	
+	private
+	
 	BUILD_STATUS_COLORS = {
 		build_failed: :red,
 		build_ok: :green,
@@ -20,27 +37,20 @@ class CiBuildStatusUpdater
 		hook_error: :yellow,
 	}
 	
-	def update(updater)
-		project_name_stream_names = CONFIG["stream names"]["statuses for CI project names"]
-		
-		project_statuses = @ci_build_status_reader.get_statuses
-		project_statuses.each do |status|
-			build_status = status[:build_status]
-			begin
-				color = BUILD_STATUS_COLORS[build_status]
-			rescue KeyError
-				raise "unknown build status “#{build_status}”"
-			end
-			number = STOPLIGHT_COLOR_NUMBERS[color]
-			
-			project_name = status[:name]
-			begin
-				stream_name = project_name_stream_names.fetch(project_name)
-			rescue KeyError
-				raise "CI project “#{project_name}” has no corresponding stream"
-			end
-			
-			updater.push_number(stream_name, number)
+	def number_to_stream_for_status(build_status)
+		begin
+			color = BUILD_STATUS_COLORS.fetch(build_status)
+		rescue KeyError
+			raise "unknown build status “#{build_status}”"
+		end
+		number = STOPLIGHT_COLOR_NUMBERS[color]
+	end
+	
+	def stream_name_for_project(project_name)
+		begin
+			project_name_stream_names.fetch(project_name)
+		rescue KeyError
+			raise "CI project “#{project_name}” has no corresponding stream"
 		end
 	end
 end
