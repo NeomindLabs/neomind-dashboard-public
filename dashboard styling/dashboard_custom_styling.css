@@ -1,0 +1,12 @@
+/* CSS for Stylish in Firefox displaying our Leftronic dashboard */
+
+/* changes needed for Stylish as a CSS payload deliverer: */
+/* everything should be !important */
+/* needs to be scoped to just our dashboard page */
+
+/* watermark: hide more, improve visual consistency */
+#watermark {
+	background-size: auto 0.9em; /* 0.9em to match height of other footer text, instead of previous 40% */
+	/*bottom: 12px*/ /* default is fine since height matches */
+	/*opacity: 0.33;*/ /* not sure if needs further dimming */
+}
