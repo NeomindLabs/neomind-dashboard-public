@@ -6,19 +6,23 @@ require './bigtuna_ci_project_status_reader'
 require './hours_logged_updater'
 require './freckle_hours_logged_reader'
 
-SinglePartDashboardUpdater.new.update do |updater|
-	build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
-	build_status_updater.update(updater)
-	
-	hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
-	hours_updater.update(updater)
+try_updating_multipart = true
+
+unless try_updating_multipart
+	SinglePartDashboardUpdater.new.update do |updater|
+		build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
+		build_status_updater.update(updater)
+		
+		hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
+		hours_updater.update(updater)
+	end
 end
 
-try_updating_multipart = false
 if try_updating_multipart
 	updater = MultiPartDashboardUpdater.new
 
 	updater.update_part(:build_status) do |updater|
+		# raise "test error"
 		build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
 		build_status_updater.update(updater)
 	end

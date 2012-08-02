@@ -18,8 +18,13 @@ Leftronic dashboard:
     daily logged hours: freckle_daily_hours
     
     updater script:
+      statuses for part IDs:
+        "hours": updater_script_hours_status_text
+        "build_status": updater_script_build_status_status_text
+      
       status spotlight: updater_script_status_spotlight
       status text: updater_script_status_text
+      
 
 BigTuna CI:
   statuses URL: redacted
