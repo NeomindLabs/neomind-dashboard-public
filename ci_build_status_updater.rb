@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require './stoplight_color_numbers'
 require './config_loader'
+require './stoplight_color_numbers'
 
 class CiBuildStatusUpdater
 	CONFIG = ConfigLoader.new.config_for("Leftronic dashboard")

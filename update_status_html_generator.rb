@@ -10,14 +10,9 @@ module UpdateStatusHtmlGenerator
 		when :success
 			success_html_explanation
 		when :in_progress
-			# klass = self.class.superclass
-			# p self.class
-			# p klass
-			# p (self.methods.sort - klass.new.methods)
 			in_progress_html_explanation
 		when :error
 			error_html_explanation
-			# "error"
 		end
 	end
 	
@@ -46,49 +41,5 @@ module UpdateStatusHtmlGenerator
 		time_html = "<div>#{medium_term_time_string}</div>"
 		
 		return header + section_separator + time_html
-	end
-end
-
-module WholeDashboardUpdateStatusHtmlGenerator
-	extend UpdateStatusHtmlGenerator
-	
-	private
-	
-	class << self
-		def success_html_explanation
-			html_of_time_with_header("Dashboard last "+camouflaged_link_to_script_code("updated"))
-		end
-		
-		def in_progress_html_explanation
-			"Updating dashboard (#{short_term_time_string})…"
-		end
-		
-		def error_html_explanation
-			html_of_time_with_header("Dashboard "+camouflaged_link_to_script_code("update")+" failed")
-		end
-	end
-end
-
-module SinglePartUpdateStatusHtmlGenerator
-	extend UpdateStatusHtmlGenerator
-	
-	private
-	
-	class << self
-		def success_html_explanation
-			html_of_time_with_header("Last "+camouflaged_link_to_script_code("updated"))
-		end
-		
-		def in_progress_html_explanation
-			"Updating (#{short_term_time_string})…"
-		end
-		
-		def error_html_explanation
-			camouflaged_link_to_script_code("Update")+" at "+medium_term_time_string+" "+color_red("failed")+"!"
-		end
-		
-		def color_red(text)
-			'<span style="color: red">'+text+'</span>'
-		end
 	end
 end

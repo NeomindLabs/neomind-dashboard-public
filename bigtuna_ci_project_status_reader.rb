@@ -13,7 +13,7 @@ class BigtunaCiProjectStatusReader
 		# scrape the statuses web page (more convenient than looking up an API)
 		
 		url = CONFIG["statuses URL"]
-		doc = Nokogiri::HTML(open(url))
+		doc = Nokogiri::HTML( open(url) )
 		projects = doc.css('.project')
 		
 		project_statuses = projects.map do |project|
