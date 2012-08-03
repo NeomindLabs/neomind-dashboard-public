@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require './config_loader'
-require './stoplight_color_numbers'
-require './whole_dashboard_update_status_html_generator'
+require_relative 'config_loader'
+require_relative 'stoplight_color_numbers'
+require_relative 'whole_dashboard_update_status_html_generator'
 
 class SinglePartDashboardUpdateStatusUpdater
 	CONFIG = ConfigLoader.new.config_for("Leftronic dashboard")

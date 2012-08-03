@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require './dashboard_updater'
-require './dashboard_part_update_status_updater_factory'
+require_relative 'dashboard_updater'
+require_relative 'dashboard_part_update_status_updater_factory'
 
 class MultiPartDashboardUpdater < DashboardUpdater
 	def initialize

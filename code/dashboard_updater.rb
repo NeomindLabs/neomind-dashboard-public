@@ -1,8 +1,8 @@
 # encoding: utf-8
 
-require './config_loader'
+require_relative 'config_loader'
 
-require './leftronic/ruby/leftronic'
+require_relative '../lib/leftronic/ruby/leftronic'
 
 class DashboardUpdater
 	CONFIG = ConfigLoader.new.config_for("Leftronic dashboard")

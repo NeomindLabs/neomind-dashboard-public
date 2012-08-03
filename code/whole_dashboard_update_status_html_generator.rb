@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require './update_status_html_generator'
+require_relative 'update_status_html_generator'
 
 module WholeDashboardUpdateStatusHtmlGenerator
 	extend UpdateStatusHtmlGenerator

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require './dashboard_updater'
-require './single_part_dashboard_update_status_updater'
+require_relative 'dashboard_updater'
+require_relative 'single_part_dashboard_update_status_updater'
 
 class SinglePartDashboardUpdater < DashboardUpdater
 	def update(&block)

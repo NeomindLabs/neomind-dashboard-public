@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-require './config_loader'
-require './dashboard_part_update_status_updater'
+require_relative 'config_loader'
+require_relative 'dashboard_part_update_status_updater'
 
 class DashboardPartUpdateStatusUpdaterFactory
 	CONFIG = ConfigLoader.new.config_for("Leftronic dashboard")

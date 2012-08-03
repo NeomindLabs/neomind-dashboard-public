@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-require './config_loader'
+require_relative 'config_loader'
 
 require 'date'
 
