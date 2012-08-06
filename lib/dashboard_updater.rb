@@ -2,7 +2,7 @@
 
 require_relative 'config_loader'
 
-require_relative '../lib/leftronic/ruby/leftronic'
+require_relative '../vendor/leftronic/ruby/leftronic'
 
 class DashboardUpdater
 	CONFIG = ConfigLoader.new.config_for("Leftronic dashboard")
