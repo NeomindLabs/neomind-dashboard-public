@@ -10,21 +10,17 @@ require_relative 'exception_printing'
 updater = MultiPartDashboardUpdater.new
 
 threads = {
-	:update_build_status => Thread.new do
-		ExceptionPrinting::BlockCaller.call do
-			updater.update_part(:build_status) do |updater|
-				build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
-				build_status_updater.update(updater)
-			end
+	:update_build_status => ExceptionPrinting::ThreadBuilder.new_thread do
+		updater.update_part(:build_status) do |updater|
+			build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
+			build_status_updater.update(updater)
 		end
 	end,
 
-	:update_hours => Thread.new do
-		ExceptionPrinting::BlockCaller.call do
-			updater.update_part(:hours) do |updater|
-				hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
-				hours_updater.update(updater)
-			end
+	:update_hours => ExceptionPrinting::ThreadBuilder.new_thread do
+		updater.update_part(:hours) do |updater|
+			hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
+			hours_updater.update(updater)
 		end
 	end,
 }
