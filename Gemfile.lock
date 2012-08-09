@@ -18,6 +18,9 @@ GEM
     multipart-post (1.1.5)
     nokogiri (1.5.5)
     rack (1.4.1)
+    rufus-scheduler (2.0.17)
+      tzinfo (>= 0.3.23)
+    tzinfo (0.3.33)
 
 PLATFORMS
   ruby
@@ -25,3 +28,4 @@ PLATFORMS
 DEPENDENCIES
   letsfreckle-client
   nokogiri
+  rufus-scheduler
