@@ -2,4 +2,4 @@
 
 # update the whole dashboard, periodically, forever
 
-bundle exec ruby lib/push_leftronic_data_multi_part_on_schedule.rb
+bundle exec ruby lib/update_multi_part_dashboard_on_schedule.rb
