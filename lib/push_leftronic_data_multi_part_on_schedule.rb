@@ -12,24 +12,17 @@ require 'rufus/scheduler'
 updater = MultiPartDashboardUpdater.new
 scheduler = Rufus::Scheduler.start_new
 
-# scheduler.every '5m' do
-scheduler.every '20s' do
+scheduler.every '5m' do
 	updater.update_part(:build_status) do |updater|
-		
-		sleep 5
-		# build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
-		# build_status_updater.update(updater)
+		build_status_updater = CiBuildStatusUpdater.new(BigtunaCiProjectStatusReader.new)
+		build_status_updater.update(updater)
 	end
 end
 
-# scheduler.every '1h' do
-scheduler.every '30s' do
+scheduler.every '1h' do
 	updater.update_part(:hours) do |updater|
-		raise "test error"
-		
-		sleep 7.5
-		# hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
-		# hours_updater.update(updater)
+		hours_updater = HoursLoggedUpdater.new(FreckleHoursLoggedReader.new)
+		hours_updater.update(updater)
 	end
 end
 
